@@ -72,9 +72,12 @@ TODO:
 	- kit_preset
 */
 
+type Root struct {
+	Instrument NewInstrument `yaml:"instrument"`
+}
 type NewInstrument struct {
 	Id          int64                `yaml:"-"`
-	Uid         string               `yaml:"UUID"`
+	Uid         string               `yaml:"uuid"`
 	Key         string               `yaml:"key"`
 	Name        string               `yaml:"name"`
 	FullName    string               `yaml:"fullName,omitempty"`
@@ -161,8 +164,11 @@ func TransformKitFormat(path string) error {
 		}
 		newi.LayersMap = mlrs
 
+		ri := Root{
+			Instrument: newi,
+		}
 		// write to file
-		data, err := yaml.Marshal(&newi)
+		data, err := yaml.Marshal(&ri)
 		if err != nil {
 			slog.Error(fmt.Sprintln(fmt.Errorf("failed marshal to yaml: %w", err)))
 		}
